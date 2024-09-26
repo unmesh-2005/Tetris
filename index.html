@@ -66,16 +66,12 @@
   <div class="cntr">
     <div id="screen" class="disp"></div>
     <div class="button_container">
-      <button id="left">Left</button>
-      <button id="right">Right</button>
-      <button id="rotate">Rotate</button>
+      <button onclick="move_left()">Left</button>
+      <button onclick="move_right()">Right</button>
+      <button onclick="rotate()">Rotate</button>
     </div>
   </div>
   <script>
-    const left_button = document.getElementById("left");
-    const right_button = document.getElementById("right");
-    const rotate_button = document.getElementById("rotate");
-    let intervalId;
     const row = 20, column = 20, space = "..", brick = "[]", occupied_row = new Array(column).fill(brick), empty_row = new Array(column).fill(space);
     const game_state = {
         screen: document.getElementById("screen"),
@@ -464,54 +460,7 @@
                 break;
         }
     };
-
-    const startClick = (btn) => {
-      intervalId = setInterval(() => {
-        if(btn==0){
-          move_left();
-        }
-        if(btn==1){
-          move_right();
-        }
-        if(btn==2){
-          rotate();
-        }
-      }, 100);
-    };
-
-    const stopClick = () => {
-      clearInterval(intervalId);
-    };
-    // Mouse events
-    left_button.addEventListener('mousedown', startClick(0));
-    left_button.addEventListener('mouseup', stopClick);
-    left_button.addEventListener('mouseleave', stopClick);
-    right_button.addEventListener('mousedown', startClick(1));
-    right_button.addEventListener('mouseup', stopClick);
-    right_button.addEventListener('mouseleave', stopClick);
-    rotate_button.addEventListener('mousedown', startClick(2));
-    rotate_button.addEventListener('mouseup', stopClick);
-    rotate_button.addEventListener('mouseleave', stopClick);
-
-    // Touch events
-    left_button.addEventListener('touchstart', (e) => {
-      e.preventDefault();
-      startClick(0);
-    });
-    left_button.addEventListener('touchend', stopClick);
-    left_button.addEventListener('touchcancel', stopClick);
-    right_button.addEventListener('touchstart', (e) => {
-      e.preventDefault();
-      startClick(1);
-    });
-    right_button.addEventListener('touchend', stopClick);
-    right_button.addEventListener('touchcancel', stopClick);
-    rotate_button.addEventListener('touchstart', (e) => {
-      e.preventDefault();
-      startClick(2);
-    });
-    rotate_button.addEventListener('touchend', stopClick);
-    rotate_button.addEventListener('touchcancel', stopClick);
+    
     function show() {
       for (let i = 0; i < row; i++) {
         for (let j = 0; j < column; j++) {
