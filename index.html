@@ -465,42 +465,53 @@
         }
     };
 
-    left_button.addEventListener('mousedown', () => {
+    const startClick = (btn) => {
       intervalId = setInterval(() => {
-        move_left();
+        if(btn==0){
+          move_left();
+        }
+        if(btn==1){
+          move_right();
+        }
+        if(btn==2){
+          rotate();
+        }
       }, 100);
-    });
-    left_button.addEventListener('mouseup', () => {
-      clearInterval(intervalId);
-    });
-    left_button.addEventListener('mouseleave', () => {
-      clearInterval(intervalId);
-    });
+    };
 
-    right_button.addEventListener('mousedown', () => {
-      intervalId = setInterval(() => {
-        move_left();
-      }, 100);
-    });
-    right_button.addEventListener('mouseup', () => {
+    const stopClick = () => {
       clearInterval(intervalId);
-    });
-    right_button.addEventListener('mouseleave', () => {
-      clearInterval(intervalId);
-    });
+    };
+    // Mouse events
+    left_button.addEventListener('mousedown', startClick(0));
+    left_button.addEventListener('mouseup', stopClick);
+    left_button.addEventListener('mouseleave', stopClick);
+    right_button.addEventListener('mousedown', startClick(1));
+    right_button.addEventListener('mouseup', stopClick);
+    right_button.addEventListener('mouseleave', stopClick);
+    rotate_button.addEventListener('mousedown', startClick(2));
+    rotate_button.addEventListener('mouseup', stopClick);
+    rotate_button.addEventListener('mouseleave', stopClick);
 
-    rotate_button.addEventListener('mousedown', () => {
-      intervalId = setInterval(() => {
-        move_left();
-      }, 100);
+    // Touch events
+    left_button.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      startClick(0);
     });
-    rotate_button.addEventListener('mouseup', () => {
-      clearInterval(intervalId);
+    left_button.addEventListener('touchend', stopClick);
+    left_button.addEventListener('touchcancel', stopClick);
+    right_button.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      startClick(1);
     });
-    rotate_button.addEventListener('mouseleave', () => {
-      clearInterval(intervalId);
+    right_button.addEventListener('touchend', stopClick);
+    right_button.addEventListener('touchcancel', stopClick);
+    rotate_button.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      startClick(2);
     });
-    
+    rotate_button.addEventListener('touchend', stopClick);
+    rotate_button.addEventListener('touchcancel', stopClick);
     function show() {
       for (let i = 0; i < row; i++) {
         for (let j = 0; j < column; j++) {
