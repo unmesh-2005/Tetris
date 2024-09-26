@@ -61,14 +61,13 @@
     }
   </style>
 </head>
-
 <body>
   <div class="cntr">
     <div id="screen" class="disp"></div>
     <div class="button_container">
       <button onclick="move_left()">Left</button>
-      <button onclick="rotate()">Rotate</button>
       <button onclick="move_right()">Right</button>
+      <button onclick="rotate()">Rotate</button>
     </div>
   </div>
   <script>
@@ -298,10 +297,10 @@
             game_state.grid[p] = [...game_state.grid[p - 1]];
           }
           game_state.grid[0] = [...empty_row];
-          temporary += 1;
-          if (temporary == 4) {
+          cleared_rows += 1;
+          if (cleared_rows == 4) {
             game_state.points += column * 7;
-            temporary = 0;
+            cleared_rows = 0;
           } else {
             game_state.points += column;
           }
@@ -312,13 +311,35 @@
             }
           }
         }
-        if (temporary != 0) {
-          temporary -= 1;
+        if (cleared_rows != 0) {
+          cleared_rows -= 1;
         }
       }
     }
     
+    function check_boundary([left_boundary, right_boundary, vertical_boundary]) {
+        if (game_state.x_coordinate < left_boundary) {
+            game_state.x_coordinate = column - right_boundary;
+            if(detectCollision()){
+                game_state.x_coordinate = left_boundary;
+            }
+        } else if (game_state.x_coordinate > column - right_boundary) {
+            game_state.x_coordinate = left_boundary;
+            if(detectCollision()){
+                game_state.x_coordinate = column - right_boundary;
+            }
+        } else if (game_state.y_coordinate > row - vertical_boundary) {
+            newBlock();
+        }
+    }
+    
+    function boundary() {
+      let boundaries = {0:[0, 2, 2],1:[0, 1, 4],2:[0, 4, 1],3:[1, 2, 2],4:[0, 2, 3],5:[0, 3, 2],6:[1, 1, 3],7:[0, 2, 3],8:[0, 3, 2],9:[0, 2, 3],10:[2, 1, 2],11:[1, 1, 3],12:[0, 3, 2],13:[0, 2, 3],14:[0, 3, 2],15:[0, 3, 2],16:[1, 1, 3],17:[1, 2, 2],18:[0, 2, 3]};
+      check_boundary(boundaries[game_state.block_number]);
+    }
+    
     function detectCollision() {
+      boundary();
       let current_coordinates = pieces[game_state.block_number].positions(game_state.x_coordinate, game_state.y_coordinate);
       for (let i in game_state.occupied_coordinates) {
         for (let j in current_coordinates) {
@@ -370,27 +391,6 @@
         game_state.interval = 100000;
     }
     
-    function check_boundary([left_boundary, right_boundary, vertical_boundary]) {
-        if (game_state.x_coordinate < left_boundary) {
-            game_state.x_coordinate = column - right_boundary;
-            if(detectCollision()){
-                game_state.x_coordinate = left_boundary;
-            }
-        } else if (game_state.x_coordinate > column - right_boundary) {
-            game_state.x_coordinate = left_boundary;
-            if(detectCollision()){
-                game_state.x_coordinate = column - right_boundary;
-            }
-        } else if (game_state.y_coordinate > row - vertical_boundary) {
-            newBlock();
-        }
-    }
-    
-    function boundary() {
-      let boundaries = {0:[0, 2, 2],1:[0, 1, 4],2:[0, 4, 1],3:[1, 2, 2],4:[0, 2, 3],5:[0, 3, 2],6:[1, 1, 3],7:[0, 2, 3],8:[0, 3, 2],9:[0, 2, 3],10:[2, 1, 2],11:[1, 1, 3],12:[0, 3, 2],13:[0, 2, 3],14:[0, 3, 2],15:[0, 3, 2],16:[1, 1, 3],17:[1, 2, 2],18:[0, 2, 3]};
-      check_boundary(boundaries[game_state.block_number]);
-    }
-    
     function clean() {
         game_state.display = "";
         try {
@@ -430,7 +430,7 @@
     function move_right() {
         game_state.x_coordinate += 1;
         if(detectCollision()){
-            game_state.x_coordinate -= 1;
+          game_state.x_coordinate -= 1;
         }
         assign();
     }
@@ -488,7 +488,6 @@
         if(detectCollision()){
             newBlock();
         }
-        boundary();
         assign();
         show();
       }else{
@@ -498,5 +497,4 @@
     setInterval(update, game_state.interval);
   </script>
 </body>
-
 </html>
