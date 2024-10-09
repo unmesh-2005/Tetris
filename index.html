@@ -488,8 +488,10 @@
         if(detectCollision()){
             newBlock();
         }
-        assign();
-        show();
+        if(!game_state.game_over){
+            assign();
+            show();
+        }
       }else{
         game_state.screen.innerHTML = "<div>Game Over<br>" + "Points:" + game_state.points + "<br>" + "<p>" + game_state.display + "</p></div>";
       }
