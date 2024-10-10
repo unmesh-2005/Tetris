@@ -29,6 +29,13 @@
       justify-content: center;
     }
 
+    .disp-content {
+      letter-spacing: 1px;
+      line-height: 1.2;
+      text-align: left;
+      white-space: nowrap;
+    }
+
     .button_container {
       margin-top: 10px;
     }
@@ -63,7 +70,7 @@
 </head>
 <body>
   <div class="cntr">
-    <div id="screen" class="disp"></div>
+    <div id="screen" class="disp disp-content"></div>
     <div class="button_container">
       <button onclick="move_left()">Left</button>
       <button onclick="rotate()">Rotate</button>
@@ -91,7 +98,8 @@
             [0, 0],
         ],
         game_over: false
-    }
+    };
+    let intervalId;
     
     const pieces = [
         {
@@ -388,7 +396,8 @@
         game_state.x_coordinate = column / 2 - 1;
         game_state.block_number = Math.floor(Math.random() * 18);
         game_state.game_over = detectCollision();
-        game_state.interval = 100000;
+        console.log(game_state.game_over);
+        game_state.interval = 10000;
     }
     
     function clean() {
@@ -471,7 +480,7 @@
         for (let j = 0; j < column; j++) {
           game_state.display += game_state.grid[i][j];
         }
-        game_state.display += "</br>";
+        game_state.display += "<br>";
       }
       game_state.screen.innerHTML = "<div>Points:" + game_state.points + "<br>" + "<p>" + game_state.display + "</p></div>";
     }
@@ -493,10 +502,25 @@
             show();
         }
       }else{
+        console.log("called");
+        changeInterval();
         game_state.screen.innerHTML = "<div>Game Over<br>" + "Points:" + game_state.points + "<br>" + "<p>" + game_state.display + "</p></div>";
       }
     }
-    setInterval(update, game_state.interval);
+
+    function startInterval() {
+        if (intervalId) clearInterval(intervalId);
+        intervalId = setInterval(() => {
+            update();
+        }, game_state.interval);
+    }
+
+    function changeInterval() {
+        startInterval();
+    }
+
+    startInterval();
+
   </script>
 </body>
 </html>
